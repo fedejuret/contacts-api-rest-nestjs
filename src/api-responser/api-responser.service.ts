@@ -19,7 +19,7 @@ export class ApiResponserService {
   errorResponse(@Res() res, statusCode: HttpStatus, message: string) {
     const data = {
       error: message,
-      statusCode: statusCode,
+      status: statusCode,
     };
 
     return res.status(statusCode).json(data);

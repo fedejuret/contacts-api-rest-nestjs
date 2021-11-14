@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { HandlerFilter } from './handler.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(80);
+  app.useGlobalFilters(new HandlerFilter());
+  await app.listen(3000);
 }
 bootstrap();
