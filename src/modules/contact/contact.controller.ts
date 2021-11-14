@@ -13,38 +13,39 @@ import {
 import { CreateContactDTO } from './dto/contact.dto';
 import { ContactService } from './contact.service';
 
-import { ApiResponser } from '../../helpers/api-responser';
+import { ApiResponserService } from '../../api-responser/api-responser.service';
 
 @Controller('contact')
 export class ContactController {
   constructor(
     private _contactService: ContactService,
-    private _apiResponser: ApiResponser,
+    private _apiResponser: ApiResponserService,
   ) {}
 
   @Post('/')
-  async createPost(@Body() createContactDTO: CreateContactDTO) {
+  async createPost(@Res() res, @Body() createContactDTO: CreateContactDTO) {
     const contact = await this._contactService.createContact(createContactDTO);
-    return this._apiResponser.successResponse(HttpStatus.CREATED, contact);
+    return this._apiResponser.successResponse(res, HttpStatus.CREATED, contact);
   }
 
   @Get('/')
-  async getContacts() {
+  async getContacts(@Res() res) {
     const contacts = await this._contactService.getContacts();
-    return this._apiResponser.successResponse(HttpStatus.FOUND, contacts);
+    return this._apiResponser.successResponse(res, HttpStatus.FOUND, contacts);
   }
 
   @Get('/:id')
-  async getContact(@Param('id') contactID) {
+  async getContact(@Res() res, @Param('id') contactID) {
     const contact = await this._contactService.getContact(contactID);
     if (!contact) {
       this._apiResponser.errorResponse(
+        res,
         HttpStatus.NOT_FOUND,
         'Contact Not Found',
       );
     }
 
-    return this._apiResponser.successResponse(HttpStatus.FOUND, contact);
+    return this._apiResponser.successResponse(res, HttpStatus.FOUND, contact);
   }
 
   @Put('/:id')
@@ -60,12 +61,13 @@ export class ContactController {
 
     if (!contact) {
       this._apiResponser.errorResponse(
+        res,
         HttpStatus.NOT_FOUND,
         'Contact Not Found',
       );
     }
 
-    return this._apiResponser.successResponse(HttpStatus.OK, contact);
+    return this._apiResponser.successResponse(res, HttpStatus.OK, contact);
   }
 
   @Delete('/:id')
@@ -73,11 +75,12 @@ export class ContactController {
     const contact = await this._contactService.deleteContact(contactID);
     if (!contact) {
       this._apiResponser.errorResponse(
+        res,
         HttpStatus.NOT_FOUND,
         'Contact Not Found',
       );
     }
 
-    return this._apiResponser.successResponse(HttpStatus.OK, contact);
+    return this._apiResponser.successResponse(res, HttpStatus.OK, contact);
   }
 }

@@ -10,7 +10,7 @@ export class ContactService {
   constructor(@InjectModel('Contact') private contactModel: Model<Contact>) {}
 
   async getContacts(): Promise<Contact[]> {
-    return await this.contactModel.find();
+    return await this.contactModel.find().exec();
   }
 
   async getContact(id: string): Promise<Contact> {
